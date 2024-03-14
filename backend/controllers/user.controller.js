@@ -17,3 +17,22 @@ export const getUserForSidebar = async(req ,res)=>{
         
     }
 }
+
+export const searchUserForSidebar = async (req, res) => {
+    const search = req.query.search || "";
+
+    const users = await User.find({
+        $or: [{
+            fullName: {
+                "$regex": search
+            }
+        }]
+    })
+
+    res.json({
+        user: users.map(user => ({
+            fullName: user.fullName,
+            _id: user._id
+        }))
+    })
+}
